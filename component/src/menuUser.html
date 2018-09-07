@@ -1,0 +1,33 @@
+<div class="panel-heading">
+    User Online
+</div>
+<ul class="chat" id="nameList"></ul>
+
+<script>
+    var socket = io();
+    export default {
+        oncreate: function () {
+            var nameFrom = document.getElementById('nameForm'),
+                btnRes = document.getElementById('btnRes'),
+                nameList = document.getElementById('nameList');
+            
+            socket.on('user joined', function (socketId) {
+                axios.get('/onlineusers')
+                .then(function (response) {
+                    console.log(response);
+                }.bind(this));
+            });
+                
+        },
+        ondestroy: function () {
+
+        },
+        data: function () {
+            return {
+            };
+        },
+        methods: {
+
+        }
+    };
+</script>

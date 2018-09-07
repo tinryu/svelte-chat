@@ -1,0 +1,85 @@
+<div id="livechat-container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Lets Chat
+        </div>
+        <div class="panel-body">
+            <ul class="chat" id="output"></ul>
+            <div class="wow fadeOut animated" data-wow-delay="400ms" data-wow-iteration="infinite" data-wow-duration="2s" id="feedback"></div>
+        </div>
+
+        <div class="panel-footer">
+            <div class="ui form">
+                <div class="fields">
+                    <div class="two wide field">
+                        <input type="text" placeholder="Type name user" id="handle" />
+                    </div>
+                    <div class="twelve wide field">
+                        <input type="text" placeholder="Type chat here" id="message" />
+                    </div>
+                    <div class="two wide field">
+                        <button class="fluid ui red button" id="send">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var socket = io();
+    export default {
+        oncreate: function () {
+            var btn = document.getElementById('send'),
+                handle = document.getElementById('handle'),
+                message = document.getElementById('message'),
+                output = document.getElementById('output'),
+                feedback = document.getElementById('feedback');
+
+            btn.addEventListener('click', function() {
+                this.sendMessage();
+            }.bind(this));
+
+            message.addEventListener('keypress', function() {
+                socket.emit('typing', handle.value);
+            })
+
+            //Listen event
+            socket.on('chat', function(data) {
+                this.renderListsms(data);
+            }.bind(this));
+
+            socket.on('typing', function(data){
+                feedback.innerHTML = `<p><em>` + data + ` is typing message....</em></p>`
+            });
+        },
+        ondestroy: function (){
+            btn.removeEventListener("click", function(){});
+            message.removeEventListener("keypress", function(){});
+        },
+        methods: {
+            sendMessage: function() {
+                socket.emit('chat', {
+                    message: message.value,
+                    handle: handle.value
+                })
+            },
+            renderListsms: function(data) {
+                feedback.innerHTML = '';
+                output.innerHTML += `<li class="left clearfix">
+                    <span class="chat-img pull-left">
+                        <img src="http://placehold.it/50/55C1E7/fff&text=`+ data.handle.substring(0, 1) +`" alt="User Avatar" class="img-circle" />
+                    </span>
+                    <div class="chat-body clearfix">
+                        <div class="header">
+                            <strong class="primary-font">`+ data.handle +`</strong> 
+                        </div>
+                        <p>
+                            `+ data.message +`
+                        </p>
+                    </div>
+                </li>`;
+            }
+        }
+    };
+</script>
