@@ -63,7 +63,7 @@ var methods = {
 		return {
 			c() {
 				div = createElement("div");
-				div.innerHTML = "<div class=\"panel panel-primary\"><div class=\"panel-heading\">Lets Chat</div>\r\n        <div class=\"panel-body\"><ul class=\"chat\" id=\"output\"></ul>\r\n            <div class=\"wow fadeOut animated\" data-wow-delay=\"400ms\" data-wow-iteration=\"infinite\" data-wow-duration=\"2s\" id=\"feedback\"></div></div>\r\n\r\n        <div class=\"panel-footer\"><div class=\"ui form\"><div class=\"fields\"><div class=\"two wide field\"><input type=\"text\" placeholder=\"Type name user\" id=\"handle\"></div>\r\n                    <div class=\"twelve wide field\"><input type=\"text\" placeholder=\"Type chat here\" id=\"message\"></div>\r\n                    <div class=\"two wide field\"><button class=\"fluid ui red button\" id=\"send\">Send</button></div></div></div></div></div>";
+				div.innerHTML = "<div class=\"panel panel-default\"><div class=\"panel-heading\">Let's Chat</div>\r\n        <div class=\"panel-body\"><ul class=\"chat\" id=\"output\"></ul>\r\n            <div class=\"wow fadeOut animated\" data-wow-delay=\"400ms\" data-wow-iteration=\"infinite\" data-wow-duration=\"2s\" id=\"feedback\"></div></div>\r\n\r\n        <div class=\"panel-footer\"><div class=\"ui form\"><div class=\"fields\"><div class=\"two wide field\"><input type=\"text\" placeholder=\"Type name user\" id=\"handle\" disabled=\"\"></div>\r\n                    <div class=\"twelve wide field\"><input type=\"text\" placeholder=\"Type chat here\" id=\"message\"></div>\r\n                    <div class=\"two wide field\"><button class=\"fluid ui red button\" id=\"send\">Send</button></div></div></div></div></div>";
 				div.id = "livechat-container";
 			},
 

@@ -15,16 +15,19 @@ function data() {
 	function oncreate() {
     $('#messError').hide();
     var btn = document.getElementById('go'),
-        input = document.getElementById('yourname');
+        input = document.getElementById('yourname'),
+        color = document.getElementById('yourcolor');
 
     btn.addEventListener('click', function () {
-        if(input.value === ''){
-            this.set({messError: 'Missing Name dude!!' });
+        if (input.value === '') {
+            this.set({
+                messError: 'Missing Name dude!!'
+            });
             $('#messError').show();
         } else {
             $("#app").show();
             $("#login").hide();
-            socket.emit('new user', input.value);
+            socket.emit('new user', {username: input.value, color: color.value} );
         }
     }.bind(this));
 };
@@ -34,7 +37,7 @@ function data() {
 };
 
 	function create_main_fragment(component, ctx) {
-		var div, form, div_1, text_6, button, text_8, div_3, i_2, text_9, text_10;
+		var div, form, div_1, text_6, div_3, text_11, button, text_13, div_5, i_4, text_14, text_15;
 
 		return {
 			c() {
@@ -43,21 +46,25 @@ function data() {
 				div_1 = createElement("div");
 				div_1.innerHTML = "<span class=\"ui ribbon label\">Login Chat</span>\r\n            <div class=\"ui right labeled left icon input\"><i class=\"wifi icon\"></i>\r\n                <input type=\"text\" name=\"your name\" placeholder=\"Your Name\" id=\"yourname\">\r\n                <span class=\"ui tag label\"><i class=\"keyboard icon\" style=\"margin: 0\"></i></span></div>";
 				text_6 = createText("\r\n        ");
+				div_3 = createElement("div");
+				div_3.innerHTML = "<div class=\"ui right labeled left icon input\"><i class=\"tint icon\"></i>\r\n                <input type=\"color\" placeholder=\"Chose your color\" id=\"yourcolor\" value=\"#fff\">\r\n                <span class=\"ui tag label\"><i class=\"sliders horizontal icon\" style=\"margin: 0\"></i></span></div>";
+				text_11 = createText("\r\n        ");
 				button = createElement("button");
 				button.textContent = "Go chat";
-				text_8 = createText("\r\n        ");
-				div_3 = createElement("div");
-				i_2 = createElement("i");
-				text_9 = createText(" ");
-				text_10 = createText(ctx.messError);
+				text_13 = createText("\r\n        ");
+				div_5 = createElement("div");
+				i_4 = createElement("i");
+				text_14 = createText(" ");
+				text_15 = createText(ctx.messError);
 				div_1.className = "field";
+				div_3.className = "field";
 				button.className = "mini ui button fluid grey";
 				button.type = "button";
 				button.id = "go";
-				i_2.className = "user outline icon";
-				div_3.className = "ui label fluid text-center";
-				setStyle(div_3, "margin", "0");
-				div_3.id = "messError";
+				i_4.className = "user outline icon";
+				div_5.className = "ui label fluid text-center";
+				setStyle(div_5, "margin", "0");
+				div_5.id = "messError";
 				form.className = "ui form tall stacked segment";
 				div.className = "column";
 			},
@@ -67,17 +74,19 @@ function data() {
 				append(div, form);
 				append(form, div_1);
 				append(form, text_6);
-				append(form, button);
-				append(form, text_8);
 				append(form, div_3);
-				append(div_3, i_2);
-				append(div_3, text_9);
-				append(div_3, text_10);
+				append(form, text_11);
+				append(form, button);
+				append(form, text_13);
+				append(form, div_5);
+				append(div_5, i_4);
+				append(div_5, text_14);
+				append(div_5, text_15);
 			},
 
 			p(changed, ctx) {
 				if (changed.messError) {
-					setData(text_10, ctx.messError);
+					setData(text_15, ctx.messError);
 				}
 			},
 

@@ -12,7 +12,13 @@ function data() {
     renderList: function(data) {
         nameList.innerHTML = '';
         data.forEach(item => {
-            nameList.innerHTML += `<li> `+ item +` </li>`;
+            nameList.innerHTML += `<li>
+                <small>` + item.id + `</small>
+                <p>
+                    <i class="user circle icon" style="color: `+ item.color +`" ></i> 
+                    `+ item.name +`
+                </p> 
+            </li>`;
         });
     }
 };
@@ -21,21 +27,12 @@ function data() {
     let self = this;
     var nameFrom = document.getElementById('nameForm'),
         btnRes = document.getElementById('btnRes'),
-        nameList = document.getElementById('nameList');
-
-    // if(localStorage.getItem("users")) {
-    //     let users = JSON.parse(localStorage.getItem("users"));
-    //     $("#app").show();
-    //     $("#login").hide();
-    //     self.set({count: users.length})
-    //     self.renderList(users);
-    // } else {
-    //     console.log('miss data');
-    // }
+        nameList = document.getElementById('nameList'),
+        handle = document.getElementById('handle');
 
     socket.on('username', function(data){
         if(data && data.length > 0) {
-            // localStorage.setItem("users", JSON.stringify(data));
+            handle.value = data[data.length - 1].name;
             self.set({count: data.length})
             self.renderList(data);
         }
@@ -62,7 +59,7 @@ function data() {
 				ul = createElement("ul");
 				i.className = "user green circle icon";
 				span.className = "ui green circular label";
-				div.className = "panel-heading";
+				div.className = "panel-heading text-center";
 				ul.className = "chat";
 				ul.id = "nameList";
 			},

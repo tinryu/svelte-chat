@@ -18,15 +18,12 @@ app.get('/', function(request,response) {
 
 // event Socket
 io.on('connection', function (socket) {
-    // console.log('socket.id', socket.id);
-    io.emit('user joined', nickname)
-
     socket.on('new user', function (data){
-        if(nickname.indexOf(data) != -1)
+        if(nickname.indexOf(data.username) != -1)
             console.log('existing');
         else{
-            socket.nickname = data;
-            nickname.push(socket.nickname);
+            socket.nickname = data.username;
+            nickname.push({name: socket.nickname, id: socket.id, color: data.color} );
             io.sockets.emit('username', nickname);
         }
     });
