@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --inspect ./server.js 80"
+    "watch": "nodemon --inspect ./server.js 80",
+    "start": "node ./server" 
   },
   "author": "",
   "license": "ISC",

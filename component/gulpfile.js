@@ -32,3 +32,17 @@ gulp.task('listMess', function () {
 });
 /* END LIST MESS */
 
+/*  LIST LOGIN */
+gulp.task('login', function () {
+	return gulpWatch('src/login.html', { ignoreInitial: false }, function () {
+		gulp.src('src/login.html')
+			.pipe(gulpSvelte({
+				format: 'iife',
+				filename: 'login.html',
+				name: 'Login'
+			}))
+			.pipe(gulp.dest('dist'))
+	});
+});
+/* END LIST LOGIN */
+

@@ -4,25 +4,44 @@ var MenuUser = (function() { "use strict";
 	var socket = io();
 function data() {
     return {
+        count: 0
     };
 };
 
 	var methods = {
-
+    renderList: function(data) {
+        nameList.innerHTML = '';
+        data.forEach(item => {
+            nameList.innerHTML += `<li> `+ item +` </li>`;
+        });
+    }
 };
 
 	function oncreate() {
+    let self = this;
     var nameFrom = document.getElementById('nameForm'),
         btnRes = document.getElementById('btnRes'),
         nameList = document.getElementById('nameList');
-    
-    socket.on('user joined', function (socketId) {
-        axios.get('/onlineusers')
-        .then(function (response) {
-            console.log(response);
-        }.bind(this));
+
+    // if(localStorage.getItem("users")) {
+    //     let users = JSON.parse(localStorage.getItem("users"));
+    //     $("#app").show();
+    //     $("#login").hide();
+    //     self.set({count: users.length})
+    //     self.renderList(users);
+    // } else {
+    //     console.log('miss data');
+    // }
+
+    socket.on('username', function(data){
+        if(data && data.length > 0) {
+            // localStorage.setItem("users", JSON.stringify(data));
+            self.set({count: data.length})
+            self.renderList(data);
+        }
+        else
+            console.log('miss data');
     });
-        
 };
 
 	function ondestroy() {
@@ -30,14 +49,19 @@ function data() {
 };
 
 	function create_main_fragment(component, ctx) {
-		var div, text_1, ul;
+		var div, i, text, span, text_1, text_3, ul;
 
 		return {
 			c() {
 				div = createElement("div");
-				div.textContent = "User Online";
-				text_1 = createText("\r\n");
+				i = createElement("i");
+				text = createText(" User Online ");
+				span = createElement("span");
+				text_1 = createText(ctx.count);
+				text_3 = createText("\r\n");
 				ul = createElement("ul");
+				i.className = "user green circle icon";
+				span.className = "ui green circular label";
 				div.className = "panel-heading";
 				ul.className = "chat";
 				ul.id = "nameList";
@@ -45,16 +69,24 @@ function data() {
 
 			m(target, anchor) {
 				insert(target, div, anchor);
-				insert(target, text_1, anchor);
+				append(div, i);
+				append(div, text);
+				append(div, span);
+				append(span, text_1);
+				insert(target, text_3, anchor);
 				insert(target, ul, anchor);
 			},
 
-			p: noop,
+			p(changed, ctx) {
+				if (changed.count) {
+					setData(text_1, ctx.count);
+				}
+			},
 
 			d(detach) {
 				if (detach) {
 					detachNode(div);
-					detachNode(text_1);
+					detachNode(text_3);
 					detachNode(ul);
 				}
 			}
@@ -110,7 +142,13 @@ function data() {
 		target.insertBefore(node, anchor);
 	}
 
-	function noop() {}
+	function append(target, node) {
+		target.appendChild(node);
+	}
+
+	function setData(text, data) {
+		text.data = '' + data;
+	}
 
 	function detachNode(node) {
 		node.parentNode.removeChild(node);
@@ -237,6 +275,8 @@ function data() {
 	function _differs(a, b) {
 		return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
 	}
+
+	function noop() {}
 
 	function blankObject() {
 		return Object.create(null);

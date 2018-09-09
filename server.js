@@ -16,20 +16,15 @@ app.get('/', function(request,response) {
     response.sendFile(__dirname + '/index.html');
 });
 
-app.get('/onlineusers', function(request,response) {
-    response.send(io.sockets.adapter.rooms);
-});
 // event Socket
-io.once('connection', function (socket) {
-    console.log('socket.id', socket.id);
-    //Tell all clients that someone connected
-    io.emit('user joined', socket.id)
+io.on('connection', function (socket) {
+    // console.log('socket.id', socket.id);
+    io.emit('user joined', nickname)
 
-    socket.on('new user', function(data, callback){
+    socket.on('new user', function (data){
         if(nickname.indexOf(data) != -1)
-            callback(false);
+            console.log('existing');
         else{
-            callback(true);
             socket.nickname = data;
             nickname.push(socket.nickname);
             io.sockets.emit('username', nickname);

@@ -1,0 +1,49 @@
+<div class="column">
+    <form class="ui form tall stacked segment">
+        <div class="field">
+            <span class="ui ribbon label">Login Chat</span>
+            <div class="ui right labeled left icon input">
+                <i class="wifi icon"></i>
+                <input type="text" name="your name" placeholder="Your Name" id="yourname">
+                <span class="ui tag label"><i class="keyboard icon" style="margin: 0"></i></span>
+            </div>
+        </div>
+        <button class="mini ui button fluid grey" type="button" id="go">Go chat</button>
+        <div class="ui label fluid text-center" style="margin: 0" id="messError">
+            <i class="user outline icon"></i> {messError}
+        </div>
+    </form>
+</div>
+
+<script>
+    var socket = io();
+    export default {
+        oncreate: function () {
+            $('#messError').hide();
+            var btn = document.getElementById('go'),
+                input = document.getElementById('yourname');
+
+            btn.addEventListener('click', function () {
+                if(input.value === ''){
+                    this.set({messError: 'Missing Name dude!!' });
+                    $('#messError').show();
+                } else {
+                    $("#app").show();
+                    $("#login").hide();
+                    socket.emit('new user', input.value);
+                }
+            }.bind(this));
+        },
+        ondestroy: function () {
+            btn.removeEventListener("click", function () {});
+        },
+        data: function () {
+            return {
+                messError: ''
+            };
+        },
+        methods: {
+
+        }
+    };
+</script>

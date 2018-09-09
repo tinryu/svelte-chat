@@ -33,7 +33,7 @@ var methods = {
         message = document.getElementById('message'),
         output = document.getElementById('output'),
         feedback = document.getElementById('feedback');
-
+        
     btn.addEventListener('click', function() {
         this.sendMessage();
     }.bind(this));

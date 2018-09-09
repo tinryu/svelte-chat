@@ -1,5 +1,5 @@
 <div class="panel-heading">
-    User Online
+    <i class="user green circle icon"></i> User Online <span class="ui green circular label">{count}</span>
 </div>
 <ul class="chat" id="nameList"></ul>
 
@@ -7,27 +7,46 @@
     var socket = io();
     export default {
         oncreate: function () {
+            let self = this;
             var nameFrom = document.getElementById('nameForm'),
                 btnRes = document.getElementById('btnRes'),
                 nameList = document.getElementById('nameList');
-            
-            socket.on('user joined', function (socketId) {
-                axios.get('/onlineusers')
-                .then(function (response) {
-                    console.log(response);
-                }.bind(this));
+
+            // if(localStorage.getItem("users")) {
+            //     let users = JSON.parse(localStorage.getItem("users"));
+            //     $("#app").show();
+            //     $("#login").hide();
+            //     self.set({count: users.length})
+            //     self.renderList(users);
+            // } else {
+            //     console.log('miss data');
+            // }
+
+            socket.on('username', function(data){
+                if(data && data.length > 0) {
+                    // localStorage.setItem("users", JSON.stringify(data));
+                    self.set({count: data.length})
+                    self.renderList(data);
+                }
+                else
+                    console.log('miss data');
             });
-                
         },
         ondestroy: function () {
 
         },
         data: function () {
             return {
+                count: 0
             };
         },
         methods: {
-
+            renderList: function(data) {
+                nameList.innerHTML = '';
+                data.forEach(item => {
+                    nameList.innerHTML += `<li> `+ item +` </li>`;
+                });
+            }
         }
     };
 </script>
