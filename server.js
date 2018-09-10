@@ -4,7 +4,8 @@ var http = require('http').Server(app);
 var port = process.env.PORT || 3000;
 var io = require('socket.io')(http);
 
-var nickname = [];
+// var nicknames = [];
+var users = {};
 
 http.listen(port, function () {
     console.log("Listening on *:" + port);
@@ -17,25 +18,53 @@ app.get('/', function(request,response) {
 });
 
 // event Socket
-io.on('connection', function (socket) {
+io.sockets.on('connection', function (socket) {
     socket.on('new user', function (data){
-        if(nickname.indexOf(data.username) != -1)
-            console.log('existing');
-        else{
+        if(data in users){
+            console.log('existing user');
+        }else{
             socket.nickname = data.username;
-            nickname.push({name: socket.nickname, id: socket.id, color: data.color} );
-            io.sockets.emit('username', nickname);
+            users[socket.nickname] = socket;
+            updateNicknames();
         }
     });
+    
+    function updateNicknames(){
+        io.sockets.emit('username', Object.keys(users));
+    }
+
     socket.on('chat', function (data) {
-        io.sockets.emit('chat', data);
+        var msg = data.message.trim();
+        if(msg.substr(0, 3) === '/w ') {
+            msg = msg.substr(3);
+            var ind = msg.indexOf(' ');
+            if(ind !== -1){
+                var name = msg.substring(0, ind);
+                var message = msg.substring(ind + 1);
+                if(name in users) {
+                    const recieverSocket = users[name].id
+                    io.to(recieverSocket).emit('whisper', {message: message, handle: 'username', color: data.color})
+                    console.log('whisper !');
+                } else {
+                    console.log('error enter valid user');
+                    io.sockets.emit('error', {message: 'error enter valid user'});
+                }
+            } else {
+                console.log('error pls enter message');
+                io.sockets.emit('error', {message: 'error pls enter message'});
+            }
+        } else {
+            io.sockets.emit('chat', data);
+        }
     });
 
     socket.on('typing', function (data) {
         socket.broadcast.emit('typing', data);
     });
 
-    socket.on('disconnect', function(){
+    socket.on('disconnect', function() {
+        if(!socket.nickname) return;
+        delete users[socket.nickname];
         console.log('user disconnected');
-      });
+    });
 });

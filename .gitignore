@@ -1,5 +1,5 @@
-/node_modules
-/component/node_modules
+node_modules/
+component/node_modules/
 .vscode/
 package-lock.json
 .gitignore

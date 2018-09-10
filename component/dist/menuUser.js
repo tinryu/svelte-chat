@@ -12,16 +12,17 @@ function data() {
     renderList: function (data) {
         nameList.innerHTML = '';
         data.forEach(item => {
-            nameList.innerHTML += `<li>
-                <small>` + item.id +
-                `</small>
-                <p>
-                    <i class="user circle icon" style="color: ` +
-                item.color + `" ></i> 
-                    ` + item.name +
-                `
-                </p> 
-            </li>`;
+            nameList.innerHTML += `<li><p>` + item +`</p></li>`;
+            // nameList.innerHTML += `<li>
+            //     <small>` + item.id +
+            //     `</small>
+            //     <p>
+            //         <i class="user circle icon" style="color: ` +
+            //     item.color + `" ></i> 
+            //         ` + item.name +
+            //     `
+            //     </p> 
+            // </li>`;
         });
     }
 };
@@ -36,8 +37,8 @@ function data() {
 
     socket.on('username', function (data) {
         if (data && data.length > 0) {
-            handle.value = data[data.length - 1].name;
-            colorAva.value = data[data.length - 1].color;
+            // handle.value = data[data.length - 1].name;
+            // colorAva.value = data[data.length - 1].color;
             self.set({
                 count: data.length
             })
