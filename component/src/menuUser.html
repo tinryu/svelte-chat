@@ -1,7 +1,13 @@
-<div class="panel-heading text-center">
-    <i class="user green circle icon"></i> User Online <span class="ui green circular label">{count}</span>
+<div class="ui piled segment">
+    <div class="ui sixteen wide column text-center">
+        <p>User Online </p>
+        <span class="ui orange big circular label">{count}</span>
+    </div>
+    <ul class="chat" id="nameList"></ul>
+    
+    <input type="hidden" id="colorAva" value="#fff">
 </div>
-<ul class="chat" id="nameList"></ul>
+
 
 <script>
     var socket = io();
@@ -11,15 +17,18 @@
             var nameFrom = document.getElementById('nameForm'),
                 btnRes = document.getElementById('btnRes'),
                 nameList = document.getElementById('nameList'),
-                handle = document.getElementById('handle');
+                handle = document.getElementById('handle'),
+                colorAva = document.getElementById('colorAva');
 
-            socket.on('username', function(data){
-                if(data && data.length > 0) {
+            socket.on('username', function (data) {
+                if (data && data.length > 0) {
                     handle.value = data[data.length - 1].name;
-                    self.set({count: data.length})
+                    colorAva.value = data[data.length - 1].color;
+                    self.set({
+                        count: data.length
+                    })
                     self.renderList(data);
-                }
-                else
+                } else
                     console.log('miss data');
             });
         },
@@ -32,14 +41,17 @@
             };
         },
         methods: {
-            renderList: function(data) {
+            renderList: function (data) {
                 nameList.innerHTML = '';
                 data.forEach(item => {
                     nameList.innerHTML += `<li>
-                        <small>` + item.id + `</small>
+                        <small>` + item.id +
+                        `</small>
                         <p>
-                            <i class="user circle icon" style="color: `+ item.color +`" ></i> 
-                            `+ item.name +`
+                            <i class="user circle icon" style="color: ` +
+                        item.color + `" ></i> 
+                            ` + item.name +
+                        `
                         </p> 
                     </li>`;
                 });

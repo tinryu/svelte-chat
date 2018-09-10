@@ -1,6 +1,12 @@
 body{
-    background: url('../wall.jpg') no-repeat top center !important;
-    background-size: cover;
+    background: url('../wall.jpg') no-repeat 50% 50% fixed !important;
+    background-size: cover !important;
+}
+#app {
+    float: left;
+    width: 100%;
+    padding: 2%;
+    margin-top: 1%;
 }
 #livechat-container {
     width: 100%;
@@ -24,6 +30,8 @@ body{
     list-style: none;
     margin: 0;
     padding: 0;
+    max-height: 430px;
+    overflow: auto;
 }
 
 .chat li
