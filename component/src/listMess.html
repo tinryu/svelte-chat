@@ -34,7 +34,9 @@
                 handle = document.getElementById('handle'),
                 message = document.getElementById('message'),
                 output = document.getElementById('output'),
-                feedback = document.getElementById('feedback');
+                feedback = document.getElementById('feedback'),
+                color = document.getElementById('yourcolor'),
+                colorAva = document.getElementById('colorAva');
                 
             btn.addEventListener('click', function() {
                 this.sendMessage();
@@ -61,14 +63,16 @@
             sendMessage: function() {
                 socket.emit('chat', {
                     message: message.value,
-                    handle: handle.value
+                    handle: handle.value,
+                    color: colorAva.value
                 })
             },
             renderListsms: function(data) {
+                let color = data.color.replace('#','');
                 feedback.innerHTML = '';
                 output.innerHTML += `<li class="left clearfix">
                     <span class="chat-img pull-left">
-                        <img src="http://placehold.it/50/55C1E7/fff&text=`+ data.handle.substring(0, 1) +`" alt="User Avatar" class="img-circle" />
+                        <img src="http://placehold.it/50/`+ color +`/fff&text=`+ data.handle.substring(0, 1) +`" alt="User Avatar" class="img-circle" />
                     </span>
                     <div class="chat-body clearfix">
                         <div class="header">

@@ -9,14 +9,17 @@ function data() {
 };
 
 	var methods = {
-    renderList: function(data) {
+    renderList: function (data) {
         nameList.innerHTML = '';
         data.forEach(item => {
             nameList.innerHTML += `<li>
-                <small>` + item.id + `</small>
+                <small>` + item.id +
+                `</small>
                 <p>
-                    <i class="user circle icon" style="color: `+ item.color +`" ></i> 
-                    `+ item.name +`
+                    <i class="user circle icon" style="color: ` +
+                item.color + `" ></i> 
+                    ` + item.name +
+                `
                 </p> 
             </li>`;
         });
@@ -28,15 +31,18 @@ function data() {
     var nameFrom = document.getElementById('nameForm'),
         btnRes = document.getElementById('btnRes'),
         nameList = document.getElementById('nameList'),
-        handle = document.getElementById('handle');
+        handle = document.getElementById('handle'),
+        colorAva = document.getElementById('colorAva');
 
-    socket.on('username', function(data){
-        if(data && data.length > 0) {
+    socket.on('username', function (data) {
+        if (data && data.length > 0) {
             handle.value = data[data.length - 1].name;
-            self.set({count: data.length})
+            colorAva.value = data[data.length - 1].color;
+            self.set({
+                count: data.length
+            })
             self.renderList(data);
-        }
-        else
+        } else
             console.log('miss data');
     });
 };
@@ -46,45 +52,53 @@ function data() {
 };
 
 	function create_main_fragment(component, ctx) {
-		var div, i, text, span, text_1, text_3, ul;
+		var div, div_1, p, text_1, span, text_2, text_4, ul, text_5, input;
 
 		return {
 			c() {
 				div = createElement("div");
-				i = createElement("i");
-				text = createText(" User Online ");
+				div_1 = createElement("div");
+				p = createElement("p");
+				p.textContent = "User Online";
+				text_1 = createText("\r\n        ");
 				span = createElement("span");
-				text_1 = createText(ctx.count);
-				text_3 = createText("\r\n");
+				text_2 = createText(ctx.count);
+				text_4 = createText("\r\n    ");
 				ul = createElement("ul");
-				i.className = "user green circle icon";
-				span.className = "ui green circular label";
-				div.className = "panel-heading text-center";
+				text_5 = createText("\r\n    \r\n    ");
+				input = createElement("input");
+				span.className = "ui orange big circular label";
+				div_1.className = "ui sixteen wide column text-center";
 				ul.className = "chat";
 				ul.id = "nameList";
+				setAttribute(input, "type", "hidden");
+				input.id = "colorAva";
+				input.value = "#fff";
+				div.className = "ui piled segment";
 			},
 
 			m(target, anchor) {
 				insert(target, div, anchor);
-				append(div, i);
-				append(div, text);
-				append(div, span);
-				append(span, text_1);
-				insert(target, text_3, anchor);
-				insert(target, ul, anchor);
+				append(div, div_1);
+				append(div_1, p);
+				append(div_1, text_1);
+				append(div_1, span);
+				append(span, text_2);
+				append(div, text_4);
+				append(div, ul);
+				append(div, text_5);
+				append(div, input);
 			},
 
 			p(changed, ctx) {
 				if (changed.count) {
-					setData(text_1, ctx.count);
+					setData(text_2, ctx.count);
 				}
 			},
 
 			d(detach) {
 				if (detach) {
 					detachNode(div);
-					detachNode(text_3);
-					detachNode(ul);
 				}
 			}
 		};
@@ -133,6 +147,10 @@ function data() {
 
 	function createText(data) {
 		return document.createTextNode(data);
+	}
+
+	function setAttribute(node, attribute, value) {
+		node.setAttribute(attribute, value);
 	}
 
 	function insert(target, node, anchor) {
