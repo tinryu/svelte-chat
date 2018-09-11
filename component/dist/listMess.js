@@ -50,6 +50,7 @@ var methods = {
     //Listen event
     socket.on('whisper', function(data) {
         console.log('data=================', data);
+        alert('hushush uhsuhsu');
         this.renderListsms(data);
     }.bind(this));
 

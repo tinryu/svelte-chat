@@ -36,6 +36,7 @@ function data() {
         colorAva = document.getElementById('colorAva');
 
     socket.on('username', function (data) {
+        console.log("data", data);
         if (data && data.length > 0) {
             // handle.value = data[data.length - 1].name;
             // colorAva.value = data[data.length - 1].color;

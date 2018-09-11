@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3001;
 var io = require('socket.io')(http);
 
 // var nicknames = [];
@@ -19,11 +19,14 @@ app.get('/', function(request,response) {
 
 // event Socket
 io.sockets.on('connection', function (socket) {
+    console.log('socket user id', socket.id);
     socket.on('new user', function (data){
         if(data in users){
             console.log('existing user');
         }else{
             socket.nickname = data.username;
+            console.log('name:', data.username);
+            console.log('id:', socket.id);
             users[socket.nickname] = socket;
             updateNicknames();
         }
@@ -42,8 +45,10 @@ io.sockets.on('connection', function (socket) {
                 var name = msg.substring(0, ind);
                 var message = msg.substring(ind + 1);
                 if(name in users) {
-                    const recieverSocket = users[name].id
-                    io.to(recieverSocket).emit('whisper', {message: message, handle: 'username', color: data.color})
+                    console.log('====', name);
+                    console.log('====id:', users[name].id);
+                    var recieverSocket = users[name].id;
+                    socket.to(recieverSocket).emit('whisper', {message: message, handle: 'username', color: data.color})
                     console.log('whisper !');
                 } else {
                     console.log('error enter valid user');
