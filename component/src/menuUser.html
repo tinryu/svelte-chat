@@ -10,7 +10,6 @@
 
 
 <script>
-    var socket = io();
     export default {
         oncreate: function () {
             let self = this;
@@ -23,7 +22,7 @@
             socket.on('username', function (data) {
                 console.log("data", data);
                 if (data && data.length > 0) {
-                    // handle.value = data[data.length - 1].name;
+                    handle.value = data[data.length - 1];
                     // colorAva.value = data[data.length - 1].color;
                     self.set({
                         count: data.length

@@ -27,7 +27,6 @@
 </div>
 
 <script>
-    var socket = io();
     export default {
         oncreate: function () {
             var btn = document.getElementById('send'),
@@ -49,17 +48,15 @@
 
             //Listen event
             socket.on('whisper', function(data) {
-                console.log('data=================', data);
-                alert('hushush uhsuhsu');
-                this.renderListsms(data);
+                this.renderListsms(data, 1);
             }.bind(this));
 
             socket.on('chat', function(data) {
-                this.renderListsms(data);
+                this.renderListsms(data, 0);
             }.bind(this));
 
             socket.on('typing', function(data){
-                // feedback.innerHTML = `<p><em>` + data + ` is typing message....</em></p>`
+                feedback.innerHTML = `<p><em>` + data + ` is typing message....</em></p>`
             });
         },
         ondestroy: function (){
@@ -74,7 +71,7 @@
                     color: colorAva.value
                 })
             },
-            renderListsms: function(data) {
+            renderListsms: function(data, type) {
                 let color = data.color.replace('#','');
                 feedback.innerHTML = '';
                 output.innerHTML += `<li class="left clearfix">
