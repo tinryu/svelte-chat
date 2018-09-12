@@ -16,14 +16,11 @@
             var nameFrom = document.getElementById('nameForm'),
                 btnRes = document.getElementById('btnRes'),
                 nameList = document.getElementById('nameList'),
-                handle = document.getElementById('handle'),
                 colorAva = document.getElementById('colorAva');
 
             socket.on('username', function (data) {
-                console.log("data", data);
                 if (data && data.length > 0) {
-                    handle.value = data[data.length - 1];
-                    // colorAva.value = data[data.length - 1].color;
+                    colorAva.value = data[data.length - 1].color;
                     self.set({
                         count: data.length
                     })
@@ -44,17 +41,15 @@
             renderList: function (data) {
                 nameList.innerHTML = '';
                 data.forEach(item => {
-                    nameList.innerHTML += `<li><p>` + item +`</p></li>`;
-                    // nameList.innerHTML += `<li>
-                    //     <small>` + item.id +
-                    //     `</small>
-                    //     <p>
-                    //         <i class="user circle icon" style="color: ` +
-                    //     item.color + `" ></i> 
-                    //         ` + item.name +
-                    //     `
-                    //     </p> 
-                    // </li>`;
+                    nameList.innerHTML += `<li>
+                        <small>` + item.id +`</small>
+                        <p>
+                            <i class="user circle icon" style="color: ` +
+                        item.color + `" ></i> 
+                            ` + item.name +
+                        `
+                        </p> 
+                    </li>`;
                 });
             }
         }

@@ -11,7 +11,7 @@
         <div class="field">
             <div class="ui right labeled left icon input">
                 <i class="tint icon"></i>
-                <input type="color" placeholder="Chose your color" id="yourcolor" value="#fff" >
+                <input type="color" placeholder="Chose your color" id="yourcolor" >
                 <span class="ui tag label"><i class="sliders horizontal icon" style="margin: 0"></i></span>
             </div>
 
@@ -41,7 +41,7 @@
                 } else {
                     $("#app").show();
                     $("#login").hide();
-                    socket.emit('new user', {username: input.value, color: color.value} );
+                    socket.emit('new user', {username: input.value, color: color.value});
                 }
             }.bind(this));
         },

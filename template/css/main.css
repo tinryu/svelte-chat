@@ -94,3 +94,13 @@ body{
     width: 100%;
     height: 40px;
 }
+
+#nameList {
+    margin-top: 15px;
+}
+#nameList small{
+    display: none;
+}
+#error{
+    color: red;
+}

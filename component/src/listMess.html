@@ -11,17 +11,15 @@
         <div class="panel-footer">
             <div class="ui form">
                 <div class="fields">
-                    <div class="two wide field">
-                        <input type="text" placeholder="Type name user" id="handle" disabled/>
-                    </div>
                     <div class="twelve wide field">
-                        <input type="text" placeholder="Type chat here" id="message" />
+                        <input type="text" placeholder="Type a message here" id="message" />
                     </div>
-                    <div class="two wide field">
+                    <div class="four wide field">
                         <button class="fluid ui red button" id="send">Send</button>
                     </div>
                 </div>
             </div>
+            <span id="error"></span>
         </div>
     </div>
 </div>
@@ -30,7 +28,6 @@
     export default {
         oncreate: function () {
             var btn = document.getElementById('send'),
-                handle = document.getElementById('handle'),
                 message = document.getElementById('message'),
                 output = document.getElementById('output'),
                 feedback = document.getElementById('feedback'),
@@ -42,8 +39,7 @@
             }.bind(this));
 
             message.addEventListener('keypress', function() {
-                // socket.emit('typing', handle.value); 
-                socket.emit('typing', 'some one '); 
+                socket.emit('typing'); 
             })
 
             //Listen event
@@ -55,8 +51,12 @@
                 this.renderListsms(data, 0);
             }.bind(this));
 
-            socket.on('typing', function(data){
+            socket.on('typing', function(data) {
                 feedback.innerHTML = `<p><em>` + data + ` is typing message....</em></p>`
+            });
+            
+            socket.on('error', function(data) {
+                document.getElementById('error').innerHTML = data.message;
             });
         },
         ondestroy: function (){
@@ -67,9 +67,10 @@
             sendMessage: function() {
                 socket.emit('chat', {
                     message: message.value,
-                    handle: handle.value,
                     color: colorAva.value
                 })
+
+                message.value = '';
             },
             renderListsms: function(data, type) {
                 let color = data.color.replace('#','');

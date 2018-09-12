@@ -5,9 +5,9 @@ window.addEventListener("load", startup, false);
 
 function startup() {
 	var colorWell;
-	var defaultColor = "#fff";
+	// var defaultColor = "#000";
 	colorWell = document.querySelector("#yourcolor");
-	colorWell.value = defaultColor;
+	// colorWell.value = defaultColor;
 	colorWell.addEventListener("input", updateFirst, false);
 	colorWell.select();
 }
