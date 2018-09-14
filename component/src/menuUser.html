@@ -1,6 +1,6 @@
 <div class="ui piled segment">
     <div class="ui sixteen wide column text-center">
-        <p>User Online </p>
+        <p>User Online - <i class="sign out alternate icon" id="logout"></i></p>
         <span class="ui orange big circular label">{count}</span>
     </div>
     <ul class="chat" id="nameList"></ul>
@@ -16,25 +16,30 @@
             var nameFrom = document.getElementById('nameForm'),
                 btnRes = document.getElementById('btnRes'),
                 nameList = document.getElementById('nameList'),
-                colorAva = document.getElementById('colorAva');
+                colorAva = document.getElementById('colorAva'),
+                logout = document.getElementById('logout');
 
             socket.on('username', function (data) {
                 if (data && data.length > 0) {
                     colorAva.value = data[data.length - 1].color;
-                    self.set({
-                        count: data.length
-                    })
+                    self.set({count: data.length});
+                    self.set({name: data[data.length - 1].name});
+
                     self.renderList(data);
                 } else
                     console.log('miss data');
             });
+            logout.addEventListener('click', function(){
+                self.apidelete();
+            });
         },
         ondestroy: function () {
-
+            logout.removeEventListener("click", function(){});
         },
         data: function () {
             return {
-                count: 0
+                count: 0,
+                name: ''
             };
         },
         methods: {
@@ -44,13 +49,16 @@
                     nameList.innerHTML += `<li>
                         <small>` + item.id +`</small>
                         <p>
-                            <i class="user circle icon" style="color: ` +
-                        item.color + `" ></i> 
-                            ` + item.name +
-                        `
+                            <i class="user circle icon" style="color: ` +item.color + `" ></i>
+                            ` + item.name + `
                         </p> 
                     </li>`;
                 });
+            },
+            apidelete: function() {
+                axios.delete('/user/' + this.get().name).then(function (res) {
+                    console.log(res);
+                }.bind(this));
             }
         }
     };

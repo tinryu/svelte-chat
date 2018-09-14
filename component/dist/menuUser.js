@@ -3,7 +3,8 @@ var MenuUser = (function() { "use strict";
 
 	function data() {
     return {
-        count: 0
+        count: 0,
+        name: ''
     };
 };
 
@@ -14,13 +15,16 @@ var MenuUser = (function() { "use strict";
             nameList.innerHTML += `<li>
                 <small>` + item.id +`</small>
                 <p>
-                    <i class="user circle icon" style="color: ` +
-                item.color + `" ></i> 
-                    ` + item.name +
-                `
+                    <i class="user circle icon" style="color: ` +item.color + `" ></i>
+                    ` + item.name + `
                 </p> 
             </li>`;
         });
+    },
+    apidelete: function() {
+        axios.delete('/user/' + this.get().name).then(function (res) {
+            console.log(res);
+        }.bind(this));
     }
 };
 
@@ -29,22 +33,26 @@ var MenuUser = (function() { "use strict";
     var nameFrom = document.getElementById('nameForm'),
         btnRes = document.getElementById('btnRes'),
         nameList = document.getElementById('nameList'),
-        colorAva = document.getElementById('colorAva');
+        colorAva = document.getElementById('colorAva'),
+        logout = document.getElementById('logout');
 
     socket.on('username', function (data) {
         if (data && data.length > 0) {
             colorAva.value = data[data.length - 1].color;
-            self.set({
-                count: data.length
-            })
+            self.set({count: data.length});
+            self.set({name: data[data.length - 1].name});
+
             self.renderList(data);
         } else
             console.log('miss data');
     });
+    logout.addEventListener('click', function(){
+        self.apidelete();
+    });
 };
 
 	function ondestroy() {
-
+    logout.removeEventListener("click", function(){});
 };
 
 	function create_main_fragment(component, ctx) {
@@ -55,7 +63,7 @@ var MenuUser = (function() { "use strict";
 				div = createElement("div");
 				div_1 = createElement("div");
 				p = createElement("p");
-				p.textContent = "User Online";
+				p.innerHTML = "User Online - <i class=\"sign out alternate icon\" id=\"logout\"></i>";
 				text_1 = createText("\r\n        ");
 				span = createElement("span");
 				text_2 = createText(ctx.count);

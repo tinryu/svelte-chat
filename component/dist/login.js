@@ -8,7 +8,15 @@ var Login = (function() { "use strict";
 };
 
 	var methods = {
-
+    checkUser: function(obj){
+        axios.get('/check/?name=' + obj.name).then(function (res) {
+            if(res.data.flag === 1){
+                alert(res.data.meassge);
+            }else {
+                socket.emit('new user', {username: obj.name, color: obj.color});
+            }
+        }.bind(this));
+    }
 };
 
 	function oncreate() {
@@ -24,11 +32,20 @@ var Login = (function() { "use strict";
             });
             $('#messError').show();
         } else {
-            $("#app").show();
-            $("#login").hide();
-            socket.emit('new user', {username: input.value, color: color.value});
+            let obj = {name: input.value, color: color.value};
+            this.checkUser(obj);
         }
+            
     }.bind(this));
+    
+    socket.on('usersucess', function(data){
+        $("#app").show();
+        $("#login").hide();
+    });
+
+    socket.on('userexist', function(data){
+        alert(data);
+    });
 };
 
 	function ondestroy() {

@@ -19,13 +19,48 @@ var ListMess = (function() { "use strict";
             </span>
             <div class="chat-body clearfix">
                 <div class="header">
-                    <strong class="primary-font">`+ data.handle +`</strong> 
+                    <strong class="primary-font">`+ data.handle +`</strong>
+                    <small class="pull-right text-muted">
+                        <span class="calendar alternate outline"></span>&nbsp;` +moment().calendar()+ `
+                    </small>
                 </div>
                 <p>
                     `+ data.message +`
                 </p>
             </div>
         </li>`;
+    },
+    getHistoryChat: function() {
+        axios.get('/all').then(function (res) {
+            let history = document.getElementById('history');
+            if(res.data){
+                let messages = res.data;
+                Object.keys(messages).map(function(objectKey, index) {
+                    var data = objectKey.split("-");
+                    let color = data[3].replace('#','');
+                    var value = messages[objectKey];
+                    
+                    history.innerHTML += `<li class="left clearfix">
+                        <span class="chat-img pull-left">
+                            <img src="http://placehold.it/50/`+ color +`/fff&text=`+ data[2].substring(0, 1) +`" alt="User Avatar" class="img-circle" />
+                        </span>
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="primary-font">`+ data[2] +`</strong> 
+                                <small class="pull-right text-muted">
+                                    <span class="calendar alternate outline"></span>&nbsp;` +data[4]+ `
+                                </small>
+                            </div>
+                            <p>
+                                `+ value +`
+                            </p>
+                        </div>
+                    </li>`;
+                });
+            }else {
+                console.log('History is empty');
+            }
+        }.bind(this));
     }
 };
 
@@ -35,7 +70,17 @@ var ListMess = (function() { "use strict";
         output = document.getElementById('output'),
         feedback = document.getElementById('feedback'),
         color = document.getElementById('yourcolor'),
-        colorAva = document.getElementById('colorAva');
+        colorAva = document.getElementById('colorAva'),
+        history = document.getElementById('history'),
+        loadhistory = document.getElementById('loadhistory');
+
+    $("#history").hide();
+    this.getHistoryChat();
+
+    loadhistory.addEventListener('click', function() {
+        $("#history").show();
+        $("#loadhistory").hide();
+    })
         
     btn.addEventListener('click', function() {
         this.sendMessage();
@@ -65,6 +110,7 @@ var ListMess = (function() { "use strict";
 
 	function ondestroy(){
     btn.removeEventListener("click", function(){});
+    loadhistory.removeEventListener("click", function(){});
     message.removeEventListener("keypress", function(){});
 };
 
@@ -74,7 +120,7 @@ var ListMess = (function() { "use strict";
 		return {
 			c() {
 				div = createElement("div");
-				div.innerHTML = "<div class=\"panel panel-default\"><div class=\"panel-heading\">Let's Chat</div>\r\n        <div class=\"panel-body\"><ul class=\"chat\" id=\"output\"></ul>\r\n            <div class=\"wow fadeOut animated\" data-wow-delay=\"400ms\" data-wow-iteration=\"infinite\" data-wow-duration=\"2s\" id=\"feedback\"></div></div>\r\n\r\n        <div class=\"panel-footer\"><div class=\"ui form\"><div class=\"fields\"><div class=\"twelve wide field\"><input type=\"text\" placeholder=\"Type a message here\" id=\"message\"></div>\r\n                    <div class=\"four wide field\"><button class=\"fluid ui red button\" id=\"send\">Send</button></div></div></div>\r\n            <span id=\"error\"></span></div></div>";
+				div.innerHTML = "<div class=\"panel panel-default\"><div class=\"panel-heading\">Let's Chat</div>\r\n        <div class=\"panel-body\"><ul class=\"chat\" id=\"history\"></ul>\r\n            <div class=\"text-center\" id=\"loadhistory\"><i class=\"sync icon\"></i>\r\n                <p>load history</p></div>\r\n            <ul class=\"chat\" id=\"output\"></ul>\r\n            <div class=\"wow fadeOut animated\" data-wow-delay=\"400ms\" data-wow-iteration=\"infinite\" data-wow-duration=\"2s\" id=\"feedback\"></div></div>\r\n\r\n        <div class=\"panel-footer\"><div class=\"ui form\"><div class=\"fields\"><div class=\"twelve wide field\"><input type=\"text\" placeholder=\"Type a message here\" id=\"message\"></div>\r\n                    <div class=\"four wide field\"><button class=\"fluid ui red button\" id=\"send\">Send</button></div></div></div>\r\n            <span id=\"error\"></span></div></div>";
 				div.id = "livechat-container";
 			},
 
